@@ -1,0 +1,31 @@
+language: perl
+perl:
+  - "5.22"
+
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_IMAGE_NAME=test
+  matrix:
+    - BUILD_DOCKER=no
+    - BUILD_DOCKER=yes
+
+script:
+  - echo $BUILD_DOCKER
+
+## Build and push a docker image in production
+deploy:
+  - provider: script
+    script:
+      - echo "Building"
+    on:
+      branch: master
+      condition: $BUILD_DOCKER -eq 'yes'
+  - provider: script
+    script:
+      - echo "Pushing"
+    on:
+      branch: master
+      condition: $BUILD_DOCKER -eq 'yes'
